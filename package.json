@@ -1,0 +1,14 @@
+{
+  "name": "cicd_test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tlgusdl03/CICD_test.git"
+  },
+  "private": true
+}
