@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Build and Push to ECR, Update IaC Repo for Argo CD
 
 # Controls when the workflow will run
 on:
@@ -24,14 +24,40 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      # 리포지토리 클론
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      # AWS 환경 변수 설정
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      # AWS ECR 로그인
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registry-type: private
+
+      # 도커 이미지 빌드
+      - name: Build Docker image
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          TAG = ${{ github.sha }}
+          DOCKER_BUILDKIT = 1 docker build --platform linux/amd64 \ 
+            --build-arg GIT_TOKEN = "${{ secrets.GIT_TOKEN }}" \
+            -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap
+
+      # ECR에 도커 이미지 푸시
+      - name: Push to Amazon ECR
+        run: |
+          TAG = ${{ github.sha }}
+          docker push ${{ secrets.ECR_URI }}
+
+      # GitHub 사용자 설정
+      - name : Set Git config
+        run: |
+          git config --global user.name ${{ secrets.GIT_USER_NAME }}
+          git config --global user.email ${{ secrets.GIT_USER_EMAIL }}
