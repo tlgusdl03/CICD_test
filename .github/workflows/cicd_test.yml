@@ -46,7 +46,7 @@ jobs:
       - name: Build Docker image
         run: |
           TAG=${{ github.sha }}
-          DOCKER_BUILDKIT = 1 docker build --platform linux/amd64 \ 
+          export DOCKER_BUILDKIT = 1 docker build --platform linux/amd64 \ 
             --build-arg GIT_TOKEN = "${{ secrets.GIT_TOKEN }}" \
             -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap
 
