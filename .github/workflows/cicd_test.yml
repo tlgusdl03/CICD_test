@@ -45,7 +45,7 @@ jobs:
       # 도커 이미지 빌드
       - name: Build Docker image
         run: |
-          TAG = ${{ github.sha }}
+          TAG=${{ github.sha }}
           DOCKER_BUILDKIT = 1 docker build --platform linux/amd64 \ 
             --build-arg GIT_TOKEN = "${{ secrets.GIT_TOKEN }}" \
             -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap
@@ -53,7 +53,7 @@ jobs:
       # ECR에 도커 이미지 푸시
       - name: Push to Amazon ECR
         run: |
-          TAG = ${{ github.sha }}
+          TAG=${{ github.sha }}
           docker push ${{ secrets.ECR_URI }}
 
       # GitHub 사용자 설정
