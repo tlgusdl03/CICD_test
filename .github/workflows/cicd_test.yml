@@ -40,7 +40,7 @@ jobs:
           export DOCKER_BUILDKIT=1
           docker build --platform linux/amd64 \
             --build-arg GIT_TOKEN="${{ secrets.GIT_TOKEN }}" \
-            -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/my-app:$TAG .
+            -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/edu/test:$TAG .
 
       # 5. ECR에 도커 이미지 푸시
       - name: Push to Amazon ECR
